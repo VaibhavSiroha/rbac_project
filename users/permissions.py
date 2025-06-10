@@ -23,6 +23,9 @@ class HasRBACPermission(permissions.BasePermission):
             return False
         if request.user.role == 'Admin':
             return True
+        # Allow regular users to view their own profile on user list endpoint
+        if required_perm == VIEW_USERS and request.user.role == 'User':
+            return True
         if required_perm is None:
             return True
         return required_perm in ROLE_PERMISSIONS.get(request.user.role, set())
